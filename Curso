@@ -1,0 +1,90 @@
+Aula 0 -
+Banco de dado - colecao de informaçoes que se relacionam e esta armazenado em um servidor
+SQL - utilizado para fazer consulta do banco de dados relacional (armazenados em tabelas)
+
+
+Aula 1 -
+Cadastro do BigQuery
+
+Aula 2 -
+SELECT (ATRIBUTOS) 
+FROM (TABELAS)
+WHERE (CONDIÇÃO)
+DISTINCT (NÃO DEIXA REPITIR AS INFORMAÇÕES QUE VOCE ESTA BUSCANDO)
+!= (DIFERENTE DE )
+AND E OR ( 'E'  E 'OU')
+
+DUAS FORMAS DE SELECIONAR O FROM EXATO É :
+1- Entra na tabela ' microdados' / detalhes  e copiar o id da tabela.
+2- Entra na tabela 'microdados' e clicar em consulta - assim ele ja vai saber que vce quer acessar informações
+dessa tabela.
+
+Select *  
+from `basedosdados.br_poder360_pesquisas.microdados` 
+Where nome_municipio = ' Duque de Caxias'
+limit 1000;
+
+
+SELECT DISTINCT instituto
+FROM `basedosdados.br_poder360_pesquisas.microdados` ;
+
+SELECT *
+FROM `basedosdados.br_poder360_pesquisas.microdados` 
+WHERE (instituto = 'Datafolha' or instituto = 'Ibope') AND ano = 2020 and sigla_uf ='SP';
+
+DESAFIO 
+qual a consulta para descobrir a siglas dos partidos que apareceram em pesquisas eleitorais de 2014 até agora?
+
+SELECT DISTINCT sigla_partido
+FROM `basedosdados.br_poder360_pesquisas.microdados` 
+WHERE ano >= 2014 AND sigla_partido != 'N/A' AND sigla_partido != 'sem partido';
+
+QUANDO COLOCA '!=' AUTOMATICAMENTE EXCLUI ESSAS OPCOES DA PESQUISA
+
+AULA 3
+ORDER BY ( ORDENAR)
+DESC (DECRESCENTE)
+NOT NO LUGAR DO != OU IS NOT NULL TAMBEM FUNCIONA
+BETWEEN ( SIMPLICA A CONSULTA ) 
+IN NO LUGAR DO WHERE (instituto = 'Datafolha' or instituto = 'Ibope') 
+LIKE (como)
+% PODE TER QUALQUER LETRA E QTS LETRAS QUISER DEPOIS
+_ VOCE ESPECIFICA QUANTAS LETRAS ANTES E DEPOIS 
+
+SELECT *
+FROM `basedosdados.br_poder360_pesquisas.microdados` 
+Where instituto IN ('Datafolha', 'Ibope') and (sigla_uf IS NOT NULL)
+ORDER BY sigla_uf;
+
+
+SELECT distinct nome_candidato
+FROM `basedosdados.br_poder360_pesquisas.microdados` 
+Where ano >= 2014 and ano <= 2020 
+
+OU 
+Where ano BETWEEN 2014 and 2020
+
+
+
+SELECT distinct nome_candidato
+FROM `basedosdados.br_poder360_pesquisas.microdados` 
+Where nome_municipio = 'Volta Redonda'
+ORDER BY nome_candidato; 
+
+OU 
+
+ORDER BY nome_candidato DESC;
+
+
+SELECT distinct sigla_partido
+FROM `basedosdados.br_poder360_pesquisas.microdados` 
+Where sigla_partido like 'P%'
+ORDER BY sigla_partido;
+
+OU 
+
+
+Where sigla_partido like '_R__'
+
+DESAFIO
+PESQUISAS ELEITORAIS REALIZADAS NO ANO DE 2018 PARA CARGO DE PRESIDENTE NO ESTADO SP ORDENADO POR TURNO
