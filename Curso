@@ -44,7 +44,7 @@ QUANDO COLOCA '!=' AUTOMATICAMENTE EXCLUI ESSAS OPCOES DA PESQUISA
 AULA 3
 ORDER BY ( ORDENAR)
 DESC (DECRESCENTE)
-NOT NO LUGAR DO != OU IS NOT NULL TAMBEM FUNCIONA
+AND NOT NO LUGAR DO != OU IS NOT NULL TAMBEM FUNCIONA
 BETWEEN ( SIMPLICA A CONSULTA ) 
 IN NO LUGAR DO WHERE (instituto = 'Datafolha' or instituto = 'Ibope') 
 LIKE (como)
@@ -88,3 +88,82 @@ Where sigla_partido like '_R__'
 
 DESAFIO
 PESQUISAS ELEITORAIS REALIZADAS NO ANO DE 2018 PARA CARGO DE PRESIDENTE NO ESTADO SP ORDENADO POR TURNO
+
+
+AULA 4
+
+MAX (MAXIMO)
+MIN (MINIMO)
+AVG (MEDIA)
+SUM (SOMA DOS VALORES )
+AS ( COLOCAR O NOME PARA ESSAS FUNCOES QUE APARECER POIS APARECE F1, F2 NAS COLUNAS )
+COUNT( SOMA DAS LINHAS )
+round(REDUZ A CASA DECIMAL)
+ SUM calcula a soma total dos valores numéricos em uma coluna, 
+enquanto COUNT conta o número de registros (linhas) ou itens, independentemente de seus valores.
+
+SELECT MAX (valor_receita) AS max_valor_receita, 
+  MIN (valor_receita)AS min_valor_receita, 
+  AVG(valor_receita)AS avg_valor_receita, 
+  SUM(valor_receita)AS sum_valor_receita,
+FROM `basedosdados.br_tse_eleicoes.receitas_candidato` 
+WHERE ano = 2020 and sigla_uf ='BA'
+LIMIT 1000;
+
+SELECT count(distinct cpf_cnpj_doador) AS qtd_doadores
+FROM `basedosdados.br_tse_eleicoes.receitas_candidato` 
+WHERE ano = 2018 and sigla_uf ='BA';
+
+SELECT ROUND(AVG(valor_receita), 2)as avg_valor_receita 
+FROM `basedosdados.br_tse_eleicoes.receitas_candidato` 
+WHERE ano = 2018 and sigla_uf ='AC' and cargo= 'governador';
+
+DESAFIO QUANTOS FORNECEDORES DIFERENTES O GOVERNADOR RUI COSTA TEVE NAS ELEICOES DE 2018
+FAZER A CONSULTA RENOMEANDO, VALOR TOTAL DE DESPESAS, VALOR MAXIMO E VALOR MIN
+
+
+SELECT count (DISTINCT nome_fornecedor) as qt_fornecedores,
+SUM(valor_despesa ) as valor_despesa,
+MAX(valor_despesa) as max_despesa,
+MIN(valor_despesa) as min_despesa,
+  FROM `basedosdados.br_tse_eleicoes.despesas_candidato`
+  where ano= 2018 and titulo_eleitoral_candidato = '005915940558';
+
+
+AULA 5
+GROUP BY ( vai separar por grupo)
+HAVING ( vai especificar o que mostrar nesse grupo)
+
+SELECT titulo_eleitoral_candidato,
+sum(valor_receita) as sum_receita,
+count(distinct nome_doador) as qt_doador
+  FROM `basedosdados.br_tse_eleicoes.receitas_candidato` 
+  WHERE ano = 2018 and sigla_uf = 'BA' and cargo = 'governador'
+  GROUP BY titulo_eleitoral_candidato
+  HAVING qt_doador > 10
+  ORDER BY sum_receita desc;
+
+
+
+SELECT titulo_eleitoral_candidato,
+sum(valor_receita) as sum_receita,
+count(distinct nome_doador) as qt_doador,
+CASE WHEN sum(valor_receita) > 100000 THEN 'receita alta'
+ ELSE 'receita baixa' end as categoria_receita,
+  FROM `basedosdados.br_tse_eleicoes.receitas_candidato` 
+  WHERE ano = 2018 and sigla_uf = 'BA' and cargo = 'governador'
+  GROUP BY titulo_eleitoral_candidato
+  ORDER BY sum_receita desc;
+
+
+desafio
+
+ qt de fornecedores e soma de valor total de despesas dos canditados por a governador  no estado ba nos 2018
+
+SELECT titulo_eleitoral_candidato,
+round(SUM(valor_despesa),2) as sum_despesa,
+count( distinct cpf_cnpj_fornecedor ) as qt_fornecedores,
+ FROM `basedosdados.br_tse_eleicoes.despesas_candidato`
+ WHERE cargo ='governador' and ano= 2018 and sigla_uf ='BA'
+ GROUP BY titulo_eleitoral_candidato
+ ORDER BY sum_despesa desc;
